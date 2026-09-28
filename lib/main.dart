@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'chat_screen.dart';
-import 'rewards_screen.dart';
+// استيراد الشاشات الأخرى إذا لزم الأمر
+// import 'chat_screen.dart';
+// import 'rewards_screen.dart';
 
 void main() {
   runApp(const NeefStoreApp());
@@ -12,61 +13,13 @@ class NeefStoreApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Neef Store - متجر نيف',
       debugShowCheckedModeBanner: false,
-      title: 'متجر نيف',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
+        primarySwatch: Colors.indigo,
+        scaffoldBackgroundColor: Colors.grey[100],
       ),
-      home: const MainContainerScreen(),
-    );
-  }
-}
-
-class MainContainerScreen extends StatefulWidget {
-  const MainContainerScreen({super.key});
-
-  @override
-  State<MainContainerScreen> createState() => _MainContainerScreenState();
-}
-
-class _MainContainerScreenState extends State<MainContainerScreen> {
-  int _currentIndex = 0;
-
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const RewardsScreen(),
-    const ChatScreen(),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'الرئيسية والألعاب',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.card_giftcard),
-            label: 'الأرباح (شام كاش)',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'الدردشة',
-          ),
-        ],
-      ),
+      home: const HomeScreen(),
     );
   }
 }
@@ -78,63 +31,123 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('متجر نيف - الرئيسية'),
+        title: const Text('متجر نيف - Neef Store'),
         centerTitle: true,
+        backgroundColor: Colors.indigo,
       ),
-      body: ListView(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-        children: [
-          const Text(
-            'مرحباً بك في عالم الألعاب والتشويق!',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 20),
-          _buildCategoryCard(
-            context,
-            title: 'لعبة القناص والرماية (HD)',
-            subtitle: 'تصويب واقعي ومغامرة حماسية',
-            icon: Icons.gps_fixed,
-            color: Colors.redAccent,
-          ),
-          const SizedBox(height: 12),
-          _buildCategoryCard(
-            context,
-            title: 'لعبة طرنيب وتريكس',
-            subtitle: 'ألعاب الورق الجماعية الممتعة',
-            icon: Icons.style,
-            color: Colors.amber.shade700,
-          ),
-          const SizedBox(height: 12),
-          _buildCategoryCard(
-            context,
-            title: 'نظام النقاط والإعلانات',
-            subtitle: 'شاهد واربح نقاط لشام كاش',
-            icon: Icons.monetization_on,
-            color: Colors.teal,
-          ),
-        ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ترحيب والكلمات المفتاحية للتطبيق
+            const Text(
+              'أهلاً بك في عالم التحدي والربح الحقيقي',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.indigo,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'اختر لعبتك المفضلة، نافس الآخرين، واجمع النقاط لتسحب أرباحك عبر شام كاش.',
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+            const SizedBox(height: 20),
+            
+            // قسم الألعاب (قناص + تريكس)
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 1,
+                childAspectRatio: 2.2,
+                mainAxisSpacing: 16,
+                children: [
+                  // بطاقة لعبة القناص (الواقعية)
+                  _buildGameCard(
+                    title: 'لعبة القناص (الرماية الواقعية)',
+                    description: 'رسومات حقيقية، دقة عالية، وتحديات قوية.',
+                    color: Colors.black87,
+                    icon: Icons.gps_fixed,
+                    onTap: () {
+                      // هون رح نضيف الانتقال لشاشة القناص لاحقاً
+                    },
+                  ),
+                  
+                  // بطاقة لعبة تريكس والشدة
+                  _buildGameCard(
+                    title: 'لعبة تريكس والشدة (المجتمع النشط)',
+                    description: 'العب وتجانس مع أصدقائك بأجمل جلسات الورق.',
+                    color: Colors.green[800]!,
+                    icon: Icons.style,
+                    onTap: () {
+                      // هون رح نضيف الانتقال لشاشة تريكس لاحقاً
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildCategoryCard(BuildContext context, {required String title, required String subtitle, required IconData icon, required Color color}) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: color,
-          child: Icon(icon, color: Colors.white),
+  // دالة لتصميم بطاقات الألعاب بشكل مرتب وواضح
+  Widget _buildGameCard({
+    required String title,
+    required String description,
+    required Color color,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('تم اختيار: $title')),
-          );
-        },
+        child: Row(
+          children: [
+            Icon(icon, size: 50, color: Colors.white),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    description,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios, color: Colors.white70),
+          ],
+        ),
       ),
     );
   }
